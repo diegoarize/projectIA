@@ -3,8 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Node : MonoBehaviour {
+	//Reserved for heuristics calculations
+	private    int  	          dist_to_final; //number of nodes till the end
 
-	private    int  	          dist_to_final; 
+	public float g; // cost of this node + it's predecessors
+	public float h; // heuristic estimate of distance to goal
+	public float f; // sum of cumulative cost of predecessors and self and heuristic
+
+	//Reserved for heuristics calculations
+
 	private    int                qtd_pck;
 	public     string             id;
 	private    Vector3            prev_pos;    
