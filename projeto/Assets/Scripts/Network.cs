@@ -77,7 +77,8 @@ public class Network : MonoBehaviour {
 
 
 	}
-	
+	//Remover daqui quando implementado em Algorithms
+	//ao inves de chamar esse chamar o de Algorithms
 	int max_dist(Transform fst_node , Transform last_node)
 	{
 		int max = 0;

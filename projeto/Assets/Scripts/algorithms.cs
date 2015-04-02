@@ -29,4 +29,23 @@ public class algorithms : MonoBehaviour {
 		}
 		return l;
     }
+
+	public int max_dist(Transform fst_node , Transform last_node)
+	{
+		int max = 0;
+		int dist     = 0;
+		
+		if (fst_node == last_node) {
+			return 0;
+		}
+		
+		for (int i = 0; i != fst_node.GetComponent<Node>().successors.Count; ++i) {
+			//Debug.Log("In node " + fst_node.GetComponent<Node>().id);
+			++dist;
+			dist = dist + max_dist(fst_node.GetComponent<Node>().successors[i], last_node);
+			max = (dist > max) ? (dist) :(max);
+			dist = 0;
+		}
+		return max;
+	}
 }
