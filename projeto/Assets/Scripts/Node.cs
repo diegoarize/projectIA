@@ -6,23 +6,70 @@ public class Node : MonoBehaviour {
 
 	private    int  	          dist_to_final; 
 	private    int                qtd_pck;
-	private    List<Node>         successors;
+	public     string             id;
+	private    Vector3            prev_pos;    
+	public     List<Transform>    successors;
+	public     List<Transform>    predecessor;
 	private    float              link_vel;// velocity in kbits/seg
 	public     enum node_state    {INITIAL, FINAL, INTERMEDIARY};
-	private    node_state         state  =  node_state.INITIAL;  
+	public     node_state         state  =  node_state.INITIAL;  
+	public     Transform           edge_prefab;
+	public     List<Transform>     links;   
+	private    bool                successor_moved;
 
+
+	public void set_up(string id, node_state s, Vector3 pos, float link_vel,
+	              int qtd_pck)
+	{
+		this.id             =  id;
+		this.state          =  s;
+		transform.position  =  pos;
+		prev_pos            =  pos;
+		this.link_vel       =  link_vel;
+		this.qtd_pck        =  qtd_pck;
+		successor_moved      =  false;
+	}
+
+
+	void Update ()
+	{
+		if (prev_pos != transform.position || successor_moved ) {
+			for (int i = 0; i != links.Count; ++i) {
+				links[i].GetComponent<LineRenderer>().SetPosition(0, this.transform.position);
+				links[i].GetComponent<LineRenderer>().SetPosition(1, successors[i].transform.position);
+			}
+			prev_pos         = transform.position;
+			successor_moved  =  false;
+			for (int i = 0; i!= predecessor.Count; ++i) {
+				predecessor[i].GetComponent<Node>().set_successor_moved(true);
+			}
+		}
+	}
 
 	public void set_state(node_state s) 
 	{
 		state = s;
 	}
 
+	public void  set_successor_moved(bool l_value)
+	{
+		successor_moved = true;
+	}
+
+	public int get_dist()
+	{
+		return dist_to_final;
+	}
 
 	public void set_dist(int dist)
 	{
 		dist_to_final = dist;
 	}
 
+	public void set_position(Vector3 pos) 
+	{
+		this.transform.position = pos;
+	}
 
 	public void set_link_vel(float vel) 
 	{
@@ -30,9 +77,21 @@ public class Node : MonoBehaviour {
 	}
 
 
-	public void insert_sucessor(Node n)
+	public void insert_sucessor(Transform n)
 	{
+		Transform obj;
+
+		obj = Instantiate (edge_prefab, this.transform.position, Quaternion.identity) as Transform;
+		obj.GetComponent<LineRenderer> ().SetVertexCount (2);
+		obj.GetComponent<LineRenderer> ().SetPosition (0, this.transform.position);
+		obj.GetComponent<LineRenderer> ().SetPosition (1, n.transform.position);
+		obj.GetComponent<LineRenderer>().material = new Material (Shader.Find("Particles/Additive"));
+		obj.GetComponent<LineRenderer> ().SetColors (Color.red, Color.red);
+		obj.GetComponent<LineRenderer> ().SetWidth (0.1f, 0.1f);
+		links.Add (obj);
 		successors.Add (n);
+
+		n.GetComponent<Node> ().predecessor.Add (this.transform);
 	}
 
 
@@ -64,4 +123,13 @@ public class Node : MonoBehaviour {
 		return qtd_pck * pck_size / vel;
 	}
 
+	public List<Transform> get_succerssors()
+	{
+		return successors;
+	}
+
+	public void set_id(string id) 
+	{
+		this.id = id;
+	}
 }
