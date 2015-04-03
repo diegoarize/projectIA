@@ -4,14 +4,16 @@ using System.Collections.Generic;
 
 public class Network : MonoBehaviour {
 
-	public    const     float             vel_proc    =  25.0f;  // 25kbs
+	public    const     float             vel_proc    =  25.0f;  // proccessing speed of every node is 25kbs
 	public    const     float             pck_size    =  100.0f; // each packge has 100kbits of data
-	public    const     int               buff_size   =  4;	
+	public    const     int               buff_size   =  4;	     // each buffer has space for four packets
+	public    const     float 			  link_speed  =  1.0f;
 	public  			Transform         node_prefab;
 	public  			List<Transform>   graph;
 	private  			List<Transform>   explored_set;
 	private             List<Transform>   frontier_set;
 	private				Transform         final_state;
+	private   			Transform         curr_state;
 	// Use this for initialization
 	void Start () 
 	{
@@ -24,29 +26,29 @@ public class Network : MonoBehaviour {
 		obj6 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
 
 		obj1.GetComponent<Node>().set_up("A", Node.node_state.INITIAL, new Vector3(-8.2f, 0.0f, 0.0f),
-		                                 1.0f, 2);
+		                                 link_speed, 2,vel_proc);
 
 
 		obj2.GetComponent<Node>().set_up("F", Node.node_state.FINAL, new Vector3 (8.2f, 0.0f, 0.0f),
-		                                 1.0f, 3);
+		                                 link_speed, 3, vel_proc);
 
 		obj3.GetComponent<Node>().set_up("E", Node.node_state.INTERMEDIARY, new Vector3 (5.2f, -4.5f, 0.0f),
-		                                 1.0f, 1);
+		                                 link_speed, 1, vel_proc);
 
 
 		obj4.GetComponent<Node>().set_up("D", Node.node_state.INTERMEDIARY, new Vector3 (5.2f, 4.5f, 0.0f),
-		                                 1.0f, 4);
+		                                 link_speed, 4, vel_proc);
 
 
 		obj5.GetComponent<Node>().set_up("B", Node.node_state.INTERMEDIARY, new Vector3 (-4.5f, 4.5f, 0.0f),
-		                                 1.0f, 2);
+		                                 link_speed, 2, vel_proc);
 
 
 		obj6.GetComponent<Node>().set_up("C", Node.node_state.INTERMEDIARY, new Vector3 (-4.5f, -4.5f, 0.0f),
-		                                 1.0f, 1);
+		                                 link_speed, 1, vel_proc);
 
 
-
+		curr_state  = obj1;
 		final_state = obj2;
 
 		obj1.GetComponent<Node> ().insert_sucessor (obj5);
@@ -67,17 +69,128 @@ public class Network : MonoBehaviour {
 		graph.Add (obj5);
 		graph.Add (obj6);
 
+		this.frontier_set = new List<Transform> ();
+		this.explored_set = new List<Transform> ();
+
 		//Calculate the maximum distance to the final node for all the nodes in the graph
 
 		for(int i = 0; i!= graph.Count; ++i){
-			graph[i].GetComponent<Node>().set_dist( max_dist(graph[i], final_state) );
+			graph[i].GetComponent<Node>().set_dist( max_dist(graph[i]) );
 			Debug.Log("MD( " + graph[i].GetComponent<Node>().id + ") = " +  graph[i].GetComponent<Node>().get_dist());
 		}
 
-
+		Debug.Log (a_star (obj1));
 
 	}
-	//Remover daqui quando implementado em Algorithms
+
+	int max_dist(Transform initial_state)
+	{
+		Transform node = initial_state;
+		int max   =  -1;
+		int dist  =  -1;
+
+		if (frontier_set.Count != 0) {
+			frontier_set.Clear ();
+
+		}
+		if (explored_set.Count != 0) {
+			explored_set.Clear ();
+
+		}
+		frontier_set.Add(node);
+	
+		while(true) {
+			if (frontier_set.Count == 0) {
+				return max;
+			}
+			node  =  frontier_set[0];
+			frontier_set.RemoveAt(0);
+			dist++;
+			if(node.GetComponent<Node>().state == Node.node_state.FINAL){
+				max  =  (dist > max) ? (dist) : (max);
+				dist = 0;
+			}
+			else{
+				explored_set.Add(node);
+			}
+
+
+			for(int i = 0; i != node.GetComponent<Node>().successors.Count; ++i){
+				Transform child = node.GetComponent<Node>().successors[i];
+				child.GetComponent<Node>().parent = node;
+				if ( !(explored_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ||
+				       frontier_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ) ) {
+					frontier_set.Insert(0, child);
+				}
+
+			}
+
+		}
+	}
+
+	public void set_heuristic(Transform node)
+	{
+		node.GetComponent<Node>().h = node.GetComponent<Node> ().get_dist() * ((pck_size / vel_proc) * (buff_size / 2));
+		//return node.GetComponent<Node> ().get_dist * ((pck_size / vel_proc) * (buff_size / 2));
+	}
+
+	public void set_g(Transform node) 
+	{
+		node.GetComponent<Node> ().g = node.GetComponent<Node> ().time_processing (pck_size);
+		if (node.GetComponent<Node> ().parent != null) {
+			node.GetComponent<Node>().g += node.GetComponent<Node>().parent.GetComponent<Node>().g;
+		}
+	}
+
+	public float a_star(Transform initial_state) 
+	{
+		Node_Comparer node_Comparer = new Node_Comparer(); 
+		List<string> solution = new List<string> ();
+		Transform node = initial_state;
+
+		if (frontier_set.Count != 0) {
+			frontier_set.Clear ();
+			
+		}
+		if (explored_set.Count != 0) {
+			explored_set.Clear ();
+			
+		}
+		frontier_set.Add(node);
+
+		set_heuristic(node);
+		set_g(node);
+
+		Debug.Log ("Path is:");
+
+		while(true) {
+			if (frontier_set.Count == 0) {
+				return -1;;
+			}
+			node  =  frontier_set[0];
+			frontier_set.RemoveAt(0);
+			Debug.Log(node.GetComponent<Node>().id);
+
+			if (node.GetComponent<Node>().state == Node.node_state.FINAL) {
+				return node.GetComponent<Node>().get_f();
+			}
+			explored_set.Add(node);
+
+			for (int i = 0; i!= node.GetComponent<Node>().successors.Count; ++i) {
+				Transform child  =  node.GetComponent<Node>().successors[i];
+				child.GetComponent<Node>().parent  =  node;
+				if ( !(explored_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ||
+				       frontier_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ) ) {
+					set_heuristic(child);
+					set_g(child);
+					frontier_set.Add(child);
+				}
+			}
+			frontier_set.Sort(node_Comparer);
+		}
+	} 
+
+/*	//Remover daqui quando implementado em Algorithms
 	//ao inves de chamar esse chamar o de Algorithms
 	int max_dist(Transform fst_node , Transform last_node)
 	{
@@ -96,7 +209,7 @@ public class Network : MonoBehaviour {
 			dist = 0;
 		}
 		return max;
-	}
+	}*/
 
 
 	void Update () {

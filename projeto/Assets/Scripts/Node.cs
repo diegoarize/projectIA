@@ -12,29 +12,33 @@ public class Node : MonoBehaviour {
 
 	//Reserved for heuristics calculations
 
-	private    int                qtd_pck;
+	public    int                qtd_pck;
 	public     string             id;
 	private    Vector3            prev_pos;    
 	public     List<Transform>    successors;
 	public     List<Transform>    predecessor;
 	private    float              link_vel;// velocity in kbits/seg
+	private	   float              node_vel;	
 	public     enum node_state    {INITIAL, FINAL, INTERMEDIARY};
 	public     node_state         state  =  node_state.INITIAL;  
 	public     Transform           edge_prefab;
 	public     List<Transform>     links;   
 	private    bool                successor_moved;
 
+	public	   Transform           parent;  // The node in the searcj tree that generated this node
+	     
 
 	public void set_up(string id, node_state s, Vector3 pos, float link_vel,
-	              int qtd_pck)
+	              int qtd_pck, float node_vel)
 	{
 		this.id             =  id;
 		this.state          =  s;
 		transform.position  =  pos;
 		prev_pos            =  pos;
 		this.link_vel       =  link_vel;
+		this.node_vel       =  node_vel;
 		this.qtd_pck        =  qtd_pck;
-		successor_moved      =  false;
+		successor_moved     =  false;
 	}
 
 
@@ -52,6 +56,17 @@ public class Node : MonoBehaviour {
 			}
 		}
 	}
+
+	public Transform move_to_succ(Transform succ)
+	{
+		return successors.Find (x => x.GetComponent<Node> ().id == succ.GetComponent<Node> ().id);
+	}
+
+	public float get_f()
+	{
+		return h + g;
+	}
+	
 
 	public void set_state(node_state s) 
 	{
@@ -82,6 +97,7 @@ public class Node : MonoBehaviour {
 	{
 		link_vel  =  vel;
 	}
+
 
 
 	public void insert_sucessor(Transform n)
@@ -123,11 +139,11 @@ public class Node : MonoBehaviour {
 
 	/* time_processing: time to process 'qtd_pck' packets
 	 * of size 'pck_size' with a processing velocity of
-	 * 'vel'
+	 * 'vel', d(Ri,Rf)
 	 */
-	public float time_processing(float vel, float pck_size) 
+	public float time_processing(float pck_size) 
 	{
-		return qtd_pck * pck_size / vel;
+		return (qtd_pck + 1) * pck_size / node_vel;
 	}
 
 	public List<Transform> get_succerssors()
