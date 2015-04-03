@@ -55,8 +55,11 @@ public class GUIcontroller : MonoBehaviour {
 		}
 
 		// Make the third button.
-		if(GUI.Button(new Rect(20,110,90,20), "Send packet")) {
-			Debug.Log("sending a packet");
+		if(GUI.Button(new Rect(20,110,95,20), "Send pkt DFS")) {
+			Debug.Log("sending a packet DFS");
+		}
+		if(GUI.Button(new Rect(20,140,95,20), "Send pkt A*")) {
+			Debug.Log("sending a packet A*");
 		}
 	}
 
