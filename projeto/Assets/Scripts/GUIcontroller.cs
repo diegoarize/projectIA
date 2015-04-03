@@ -16,6 +16,7 @@ public class GUIcontroller : MonoBehaviour {
 	void Update() {
 
 		if (Input.GetMouseButtonDown(0)) {
+			//getClickedNode ();
 			if (createNodeClicked) {
 					createNode ();
 					createNodeClicked = false;
@@ -24,12 +25,11 @@ public class GUIcontroller : MonoBehaviour {
 					//TODO: captura objeto
 				} else {
 					//TODO: captura objeto pra o child
+					createEdge();
+					createEdgeClicked = false;
 				}
-				createEdge();
-				createEdgeClicked = false;
 			}
 		}
-		
 	}
 
 	void createNode() {
@@ -57,6 +57,14 @@ public class GUIcontroller : MonoBehaviour {
 		// Make the third button.
 		if(GUI.Button(new Rect(20,110,90,20), "Send packet")) {
 			Debug.Log("sending a packet");
+		}
+	}
+
+	void getClickedNode() {
+		RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero);
+		
+		if (hit.collider != null) {
+			Debug.Log ("Target Position: " + hit.collider.gameObject.transform.position);
 		}
 	}
 }
