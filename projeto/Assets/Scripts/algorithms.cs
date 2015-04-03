@@ -33,7 +33,7 @@ public class algorithms : MonoBehaviour
 				return l;
 		}
 
-		public int max_dist (Transform fst_node, Transform last_node)
+		public int max_dist (Node fst_node, Node last_node)
 		{
 				int max = 0;
 				int dist = 0;
@@ -42,13 +42,41 @@ public class algorithms : MonoBehaviour
 						return 0;
 				}
 		
-				for (int i = 0; i != fst_node.GetComponent<Node>().successors.Count; ++i) {
+				for (int i = 0; i != fst_node.successors.Count; ++i) {
 						//Debug.Log("In node " + fst_node.GetComponent<Node>().id);
 						++dist;
-						dist = dist + max_dist (fst_node.GetComponent<Node> ().successors [i], last_node);
+						dist = dist + max_dist (fst_node.successors [i], last_node);
 						max = (dist > max) ? (dist) : (max);
 						dist = 0;
 				}
 				return max;
 		}
+
+	public List<Transform> aStar(Transform firstNodeTransform, Transform lastNodeTransform)
+	{
+		List<Node> expandedNodes = new List<Node> ();
+		Node firstNode = firstNodeTransform.GetComponent<Node>();
+		Node lastNode = lastNodeTransform.GetComponent<Node>();
+		Node smallerDistance = firstNode;
+		//expandedNodes.Add(smallerDistance);
+
+		foreach (Node n in firstNode.successors)
+		{
+
+		}
+
+		return null;
+	}
+
+	private float calculateHeuristic(Node start, Node endNode)
+	{
+		//TODO: verificar se eh realmente isso ai
+		return (max_dist (start, endNode)) * ((Network.buff_size / 2) * Network.pck_size / Network.vel_proc);
+	}
+
+	private float calculateCost(Node first, Node current)
+	{
+		//TODO: implementar o custo ate o no atual
+		return 0;
+	}
 }

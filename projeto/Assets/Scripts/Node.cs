@@ -7,7 +7,7 @@ public class Node : MonoBehaviour {
 	private    int  	          dist_to_final; //number of nodes till the end
 
 	public float g; // cost of this node + it's predecessors
-	public float h; // heuristic estimate of distance to goal
+	public float h; // heuristic estimate of time distance to goal
 	public float f; // sum of cumulative cost of predecessors and self and heuristic
 
 	//Reserved for heuristics calculations
