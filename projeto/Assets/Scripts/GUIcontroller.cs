@@ -16,7 +16,7 @@ public class GUIcontroller : MonoBehaviour {
 	void Update() {
 
 		if (Input.GetMouseButtonDown(0)) {
-			//getClickedNode ();
+			getClickedNode();
 			if (createNodeClicked) {
 					createNode ();
 					createNodeClicked = false;
@@ -64,8 +64,8 @@ public class GUIcontroller : MonoBehaviour {
 	}
 
 	void getClickedNode() {
-		RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero);
-		
+		Debug.Log ("raycast");
+		RaycastHit2D hit = Physics2D.Raycast(mousePosition, mousePosition - Camera.main.ScreenToWorldPoint(mousePosition),Mathf.Infinity);
 		if (hit.collider != null) {
 			Debug.Log ("Target Position: " + hit.collider.gameObject.transform.position);
 		}
