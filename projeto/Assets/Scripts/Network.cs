@@ -79,7 +79,7 @@ public class Network : MonoBehaviour {
 			Debug.Log("MD( " + graph[i].GetComponent<Node>().id + ") = " +  graph[i].GetComponent<Node>().get_dist());
 		}
 
-		Debug.Log (a_star (obj1));
+		D_first_search (obj1);
 
 	}
 
@@ -215,6 +215,55 @@ public class Network : MonoBehaviour {
 	void Update () {
 	
 	}
+
+	Transform D_first_search(Transform initial_state)
+	{
+		Transform node = initial_state;
+		
+		if (frontier_set.Count != 0) {
+			frontier_set.Clear ();
+			
+		}
+		if (explored_set.Count != 0) {
+			explored_set.Clear ();
+			
+		}
+		frontier_set.Add(node);
+		set_g (node);
+
+		Debug.Log ("Path is:");
+
+		while(true) {
+			if (frontier_set.Count == 0) {
+				return null;
+			}
+			node  =  frontier_set[0];
+			frontier_set.RemoveAt(0);
+			Debug.Log(node.GetComponent<Node>().id);
+
+			if(node.GetComponent<Node>().state == Node.node_state.FINAL){
+				return node;
+			}
+			else{
+				explored_set.Add(node);
+			}
+			
+			
+			for(int i = 0; i != node.GetComponent<Node>().successors.Count; ++i){
+				Transform child = node.GetComponent<Node>().successors[i];
+	
+				if ( !(explored_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ||
+				       frontier_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ) ) {
+					frontier_set.Insert(0, child);
+					set_g(child);
+					child.GetComponent<Node>().parent = node;
+				}
+				
+			}
+			
+		}
+	}
+
 
 	
 }
