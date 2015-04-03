@@ -3,9 +3,26 @@ using System.Collections;
 
 public class GUIcontroller : MonoBehaviour {
 	private Network net;
+	private Vector3 mousePosition;
+	private bool createNodeClicked = false;
 
-	void start() {
+	void Start() {
 		net = gameObject.GetComponent<Network> ();
+	}
+
+	void Update() {
+
+		if (Input.GetMouseButtonDown(0)) {
+			if (createNodeClicked) {
+					createNode (mousePosition);
+					createNodeClicked = false;
+			}
+		}
+		
+	}
+
+	void createNode(Vector3 position) {
+		Debug.Log("create a node");
 	}
 
 	void OnGUI () {
@@ -14,7 +31,7 @@ public class GUIcontroller : MonoBehaviour {
 		
 		// Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
 		if(GUI.Button(new Rect(20,40,90,20), "Create node")) {
-			Debug.Log("create a node");
+			createNodeClicked = true;
 		}
 		
 		// Make the second button.
