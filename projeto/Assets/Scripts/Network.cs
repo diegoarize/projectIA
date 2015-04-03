@@ -145,7 +145,7 @@ public class Network : MonoBehaviour {
 	public float a_star(Transform initial_state) 
 	{
 		Node_Comparer node_Comparer = new Node_Comparer(); 
-		List<string> solution = new List<string> ();
+		//List<string> solution = new List<string> ();
 		Transform node = initial_state;
 
 		if (frontier_set.Count != 0) {
