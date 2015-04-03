@@ -16,10 +16,10 @@ public class GUIcontroller : MonoBehaviour {
 	void Update() {
 
 		if (Input.GetMouseButtonDown(0)) {
-			getClickedNode();
 			if (createNodeClicked) {
-					createNode ();
-					createNodeClicked = false;
+				mousePosition = Input.mousePosition;
+				createNode ();
+				createNodeClicked = false;
 			} else if(createEdgeClicked) {
 				if(parentNode == null) {
 					//TODO: captura objeto
@@ -64,10 +64,10 @@ public class GUIcontroller : MonoBehaviour {
 	}
 
 	void getClickedNode() {
-		Debug.Log ("raycast");
-		RaycastHit2D hit = Physics2D.Raycast(mousePosition, mousePosition - Camera.main.ScreenToWorldPoint(mousePosition),Mathf.Infinity);
-		if (hit.collider != null) {
-			Debug.Log ("Target Position: " + hit.collider.gameObject.transform.position);
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit2D hit = Physics2D.Raycast (ray.origin, ray.direction, Mathf.Infinity);
+		if (hit) {
+			Debug.Log (hit.collider.gameObject.transform);
 		}
 	}
 }

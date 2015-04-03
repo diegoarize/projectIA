@@ -1,12 +1,20 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GUIcontroller.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GUIcontroller.cs">
     <Files>
+<<<<<<< HEAD
       <File FileName="Assets/Scripts/Node_Comparer.cs" Line="5" Column="32" />
       <File FileName="Assets/Scripts/Node.cs" Line="44" Column="32" />
       <File FileName="Assets/Scripts/Network.cs" Line="251" Column="6" />
       <File FileName="Assets/Scripts/algorithms.cs" Line="63" Column="1" />
       <File FileName="Assets/Scripts/GUIcontroller.cs" Line="1" Column="1" />
+=======
+      <File FileName="Assets\Scripts\GUIcontroller.cs" Line="18" Column="37" />
+      <File FileName="Assets\Scripts\Node_Comparer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Node.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Network.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\algorithms.cs" Line="1" Column="1" />
+>>>>>>> 5480bf3b07258a954aefe285d28594bd5306f220
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
