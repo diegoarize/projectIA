@@ -26,7 +26,10 @@ public class Node : MonoBehaviour {
 	private    bool                successor_moved;
 
 	public	   Transform           parent;  // The node in the searcj tree that generated this node
-	     
+	public     Transform           parent_edge;
+
+	public     Color              default_color;
+	public     Color			  hightlight_color;	
 
 	public void set_up(string id, node_state s, Vector3 pos, float link_vel,
 	              int qtd_pck, float node_vel)
@@ -39,6 +42,9 @@ public class Node : MonoBehaviour {
 		this.node_vel       =  node_vel;
 		this.qtd_pck        =  qtd_pck;
 		successor_moved     =  false;
+	
+		default_color     =   Color.red;
+		hightlight_color  =   Color.white;
 	}
 
 
@@ -109,7 +115,7 @@ public class Node : MonoBehaviour {
 		obj.GetComponent<LineRenderer> ().SetPosition (0, this.transform.position);
 		obj.GetComponent<LineRenderer> ().SetPosition (1, n.transform.position);
 		obj.GetComponent<LineRenderer>().material = new Material (Shader.Find("Particles/Additive"));
-		obj.GetComponent<LineRenderer> ().SetColors (Color.red, Color.red);
+		obj.GetComponent<LineRenderer> ().SetColors (default_color, default_color);
 		obj.GetComponent<LineRenderer> ().SetWidth (0.1f, 0.1f);
 		links.Add (obj);
 		successors.Add (n);

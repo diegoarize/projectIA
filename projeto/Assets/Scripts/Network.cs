@@ -14,6 +14,9 @@ public class Network : MonoBehaviour {
 	private             List<Transform>   frontier_set;
 	private				Transform         final_state;
 	private   			Transform         curr_state;
+	private             Color             hightlight_color;
+	public        	    Color             default_color;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -71,7 +74,8 @@ public class Network : MonoBehaviour {
 
 		this.frontier_set = new List<Transform> ();
 		this.explored_set = new List<Transform> ();
-
+		default_color     =  Color.black;
+		hightlight_color  =  Color.white;
 		//Calculate the maximum distance to the final node for all the nodes in the graph
 
 		for(int i = 0; i!= graph.Count; ++i){
@@ -242,10 +246,16 @@ public class Network : MonoBehaviour {
 			Debug.Log(node.GetComponent<Node>().id);
 
 			if(node.GetComponent<Node>().state == Node.node_state.FINAL){
+				if(node.GetComponent<Node>().parent_edge != null){
+					node.GetComponent<Node>().parent_edge.GetComponent<LineRenderer>().SetColors(hightlight_color,hightlight_color);
+				}
 				return node;
 			}
 			else{
 				explored_set.Add(node);
+				if(node.GetComponent<Node>().parent_edge != null){
+					node.GetComponent<Node>().parent_edge.GetComponent<LineRenderer>().SetColors(hightlight_color,hightlight_color);
+				}
 			}
 			
 			
@@ -254,6 +264,7 @@ public class Network : MonoBehaviour {
 	
 				if ( !(explored_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ||
 				       frontier_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ) ) {
+					child.GetComponent<Node>().parent_edge = node.GetComponent<Node>().links[i];
 					frontier_set.Insert(0, child);
 					set_g(child);
 					child.GetComponent<Node>().parent = node;
