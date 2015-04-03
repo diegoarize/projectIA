@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Node_Comparer : MonoBehaviour, IComparer<Transform> {
+public class Node_Comparer : IComparer<Transform> {
 
 	public int Compare(Transform node1, Transform node2) 
 	{
