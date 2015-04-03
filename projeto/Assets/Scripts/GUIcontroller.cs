@@ -22,11 +22,17 @@ public class GUIcontroller : MonoBehaviour {
 				createNodeClicked = false;
 			} else if(createEdgeClicked) {
 				if(parentNode == null) {
-					//TODO: captura objeto
+					parentNode = getClickedNode();
+					Debug.Log("parent node");
+					//TODO: Fazer o highlight do node clicado
 				} else {
-					//TODO: captura objeto pra o child
+					Debug.Log("child node");
+					childNode = getClickedNode();
+					//TODO: Fazer o highlight do node clicado e depois voltar os dois pra o normal
 					createEdge();
 					createEdgeClicked = false;
+					//clear the Nodes after create the edge
+					parentNode = childNode = null;
 				}
 			}
 		}
@@ -63,11 +69,12 @@ public class GUIcontroller : MonoBehaviour {
 		}
 	}
 
-	void getClickedNode() {
+	private Transform getClickedNode() {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit2D hit = Physics2D.Raycast (ray.origin, ray.direction, Mathf.Infinity);
 		if (hit) {
-			Debug.Log (hit.collider.gameObject.transform);
+			return hit.collider.gameObject.transform;
 		}
+		return null;
 	}
 }
