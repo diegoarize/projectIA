@@ -45,7 +45,7 @@ public class algorithms : MonoBehaviour
 				for (int i = 0; i != fst_node.successors.Count; ++i) {
 						//Debug.Log("In node " + fst_node.GetComponent<Node>().id);
 						++dist;
-						dist = dist + max_dist (fst_node.successors [i], last_node);
+						dist = dist + max_dist (fst_node.successors [i].GetComponent<Node>(), last_node);
 						max = (dist > max) ? (dist) : (max);
 						dist = 0;
 				}
@@ -60,9 +60,9 @@ public class algorithms : MonoBehaviour
 		Node smallerDistance = firstNode;
 		//expandedNodes.Add(smallerDistance);
 
-		foreach (Node n in firstNode.successors)
+		foreach (Transform node in firstNode.successors)
 		{
-
+			//TODO: usar o GetComponent<Node>()
 		}
 
 		return null;
