@@ -5,24 +5,39 @@ public class GUIcontroller : MonoBehaviour {
 	private Network net;
 	private Vector3 mousePosition;
 	private bool createNodeClicked = false;
+	private bool createEdgeClicked = false;
+	private Transform parentNode, childNode;
 
 	void Start() {
 		net = gameObject.GetComponent<Network> ();
+		parentNode = childNode = null;
 	}
 
 	void Update() {
 
 		if (Input.GetMouseButtonDown(0)) {
 			if (createNodeClicked) {
-					createNode (mousePosition);
+					createNode ();
 					createNodeClicked = false;
+			} else if(createEdgeClicked) {
+				if(parentNode == null) {
+					//TODO: captura objeto
+				} else {
+					//TODO: captura objeto pra o child
+				}
+				createEdge();
+				createEdgeClicked = false;
 			}
 		}
 		
 	}
 
-	void createNode(Vector3 position) {
-		Debug.Log("create a node");
+	void createNode() {
+		Debug.Log("create a node " + mousePosition);
+	}
+
+	void createEdge() {
+		Debug.Log("create an edge");
 	}
 
 	void OnGUI () {
@@ -36,7 +51,7 @@ public class GUIcontroller : MonoBehaviour {
 		
 		// Make the second button.
 		if(GUI.Button(new Rect(20,70,90,20), "Create Edge")) {
-			Debug.Log("create an edge");
+			createEdgeClicked = true;
 		}
 
 		// Make the third button.
