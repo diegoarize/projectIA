@@ -40,6 +40,7 @@ public class GUIcontroller : MonoBehaviour {
 
 	void createNode() {
 		Debug.Log("create a node " + mousePosition);
+		//TODO: node.showBufferOnGUI ()
 	}
 
 	void createEdge() {
