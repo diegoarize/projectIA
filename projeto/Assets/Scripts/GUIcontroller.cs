@@ -84,7 +84,6 @@ public class GUIcontroller : MonoBehaviour {
 		//slider to control the node's buffer
 		if (showBuffer) {
 			vSliderValue = (int)GUI.VerticalSlider (new Rect (50, 180, 100, 80), vSliderValue, 4.0f, 0f);
-			Debug.Log (vSliderValue);
 			if(GUI.Button(new Rect(20,280,95,20), "set buffer")) {
 				setNodeBuffer(node);
 			}

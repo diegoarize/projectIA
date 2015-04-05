@@ -25,7 +25,7 @@ public class Network : MonoBehaviour {
 	void Start () 
 	{
 
-
+/*
 		Transform obj1, obj2, obj3, obj4, obj5, obj6;
 		obj1 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
 		obj2 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
@@ -91,7 +91,24 @@ public class Network : MonoBehaviour {
 
 		D_first_search (obj1);
 
-
+		*/
+	}
+	/*
+	 * Calculate the maximum distance to the final node for all the nodes in the graph
+	 * 
+	 */
+	private void calculateDistances()
+	{
+		this.frontier_set = new List<Transform> ();
+		this.explored_set = new List<Transform> ();
+		default_color = Color.black;
+		hightlight_color = Color.white;
+		//Calculate the maximum distance to the final node for all the nodes in the graph
+		
+		for (int i = 0; i!= graph.Count; ++i) {
+			graph [i].GetComponent<Node> ().set_dist (max_dist (graph [i]));
+			Debug.Log ("MD( " + graph [i].GetComponent<Node> ().id + ") = " + graph [i].GetComponent<Node> ().get_dist ());
+		}
 	}
 	/**
 	 * It creates a node on the screen
@@ -156,6 +173,7 @@ public class Network : MonoBehaviour {
 	 */
 	public void DFS()
 	{
+		calculateDistances ();
 		D_first_search (curr_state);//Pegar o retorno caso necessario
 	}
 
@@ -165,6 +183,7 @@ public class Network : MonoBehaviour {
 	 */
 	public void aStar()
 	{
+		calculateDistances ();
 		a_star (curr_state);//Pegar o retorno caso necessario
 	}
 

@@ -47,6 +47,8 @@ public class Node : MonoBehaviour {
 	
 		default_color     =   Color.red;
 		hightlight_color  =   Color.white;
+
+		gameObject.renderer.material.SetColor("_Color", Color.grey);
 	}
 
 
@@ -72,6 +74,12 @@ public class Node : MonoBehaviour {
 				predecessor[i].GetComponent<Node>().set_successor_moved(true);
 			}
 		}
+		if(state == Node.node_state.FINAL)
+			gameObject.renderer.material.SetColor("_Color", Color.red);
+		else if(state == Node.node_state.INITIAL)
+			gameObject.renderer.material.SetColor("_Color", Color.green);
+		else
+			gameObject.renderer.material.SetColor("_Color", Color.grey);
 	}
 
 	public Transform move_to_succ(Transform succ)
