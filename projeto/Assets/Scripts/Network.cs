@@ -86,6 +86,26 @@ public class Network : MonoBehaviour {
 		D_first_search (obj1);
 
 	}
+	/**
+	 * It creates a node on the screen
+	 * @param Vector3 - mousePosition
+	 * @return Transform - created Node
+	 */
+	public Transform createNode(Vector3 mousePosition)
+	{
+		Transform obj = Instantiate (node_prefab, mousePosition, Quaternion.identity) as Transform;
+		return obj;
+	}
+
+	/*
+	 * inserts a node into the network
+	 * @param Node - node
+	 * 
+	 */
+	public void insertOnNetwork(Transform node)
+	{
+		graph.Add (node);
+	}
 
 	int max_dist(Transform initial_state)
 	{
