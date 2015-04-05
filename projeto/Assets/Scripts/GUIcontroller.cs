@@ -7,10 +7,13 @@ public class GUIcontroller : MonoBehaviour {
 	private bool createNodeClicked = false;
 	private bool createEdgeClicked = false;
 	private Transform parentNode, childNode;
+	private float vSliderValue;
+	private bool showBuffer = false;
 
 	void Start() {
 		net = gameObject.GetComponent<Network> ();
 		parentNode = childNode = null;
+		float vSliderValue = 0.0F;
 	}
 
 	void Update() {
@@ -75,6 +78,19 @@ public class GUIcontroller : MonoBehaviour {
 			Debug.Log("sending a packet A*");
 			net.aStar();
 		}
+		//slider to control the node's buffer
+		if (showBuffer) {
+			vSliderValue = (int)GUI.VerticalSlider (new Rect (50, 200, 100, 80), vSliderValue, 4.0f, 0f);
+			Debug.Log (vSliderValue);
+		}
+		
+	}
+
+	private void setNodeBuffer()
+	{
+
+		showBuffer = false;
+		vSliderValue = 0f;
 	}
 
 	private Transform getClickedNode() {
