@@ -125,7 +125,10 @@ public class Network : MonoBehaviour {
 		}
 		return obj;
 	}
-
+	public void setQtdPkts(Transform node, int qtd_pkt)
+	{
+		node.GetComponent<Node> ().set_qtd_package (qtd_pkt);
+	}
 	/*
 	 * inserts a node into the network
 	 * @param Node - node

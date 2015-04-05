@@ -9,6 +9,7 @@ public class GUIcontroller : MonoBehaviour {
 	private Transform parentNode, childNode;
 	private float vSliderValue;
 	private bool showBuffer = false;
+	private Transform node;
 
 	void Start() {
 		net = gameObject.GetComponent<Network> ();
@@ -42,9 +43,11 @@ public class GUIcontroller : MonoBehaviour {
 	}
 
 	void createNode() {
-		Transform node = net.createNode (mousePosition);
+		node = net.createNode (mousePosition);
 		net.insertOnNetwork (node);
-		//TODO: node.showBufferOnGUI ()
+
+		showBuffer = true;
+
 		Debug.Log("create a node " + node);
 	}
 
@@ -80,17 +83,22 @@ public class GUIcontroller : MonoBehaviour {
 		}
 		//slider to control the node's buffer
 		if (showBuffer) {
-			vSliderValue = (int)GUI.VerticalSlider (new Rect (50, 200, 100, 80), vSliderValue, 4.0f, 0f);
+			vSliderValue = (int)GUI.VerticalSlider (new Rect (50, 180, 100, 80), vSliderValue, 4.0f, 0f);
 			Debug.Log (vSliderValue);
+			if(GUI.Button(new Rect(20,280,95,20), "set buffer")) {
+				setNodeBuffer(node);
+			}
 		}
+
 		
 	}
 
-	private void setNodeBuffer()
+	private void setNodeBuffer(Transform node)
 	{
-
+		net.setQtdPkts(node, (int)vSliderValue);
 		showBuffer = false;
 		vSliderValue = 0f;
+		node = null;
 	}
 
 	private Transform getClickedNode() {
