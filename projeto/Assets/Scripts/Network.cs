@@ -24,7 +24,7 @@ public class Network : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		/*
+
 
 		Transform obj1, obj2, obj3, obj4, obj5, obj6;
 		obj1 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
@@ -91,7 +91,7 @@ public class Network : MonoBehaviour {
 
 		D_first_search (obj1);
 
-		*/
+
 	}
 	/**
 	 * It creates a node on the screen
@@ -326,6 +326,7 @@ public class Network : MonoBehaviour {
 			if(node.GetComponent<Node>().state == Node.node_state.FINAL){
 				if(node.GetComponent<Node>().parent_edge != null){
 					node.GetComponent<Node>().parent_edge.GetComponent<LineRenderer>().SetColors(hightlight_color,hightlight_color);
+					node.GetComponent<Node>().parent_arrow_head.GetComponent<LineRenderer>().SetColors(hightlight_color, hightlight_color);
 				}
 				return node;
 			}
@@ -333,6 +334,7 @@ public class Network : MonoBehaviour {
 				explored_set.Add(node);
 				if(node.GetComponent<Node>().parent_edge != null){
 					node.GetComponent<Node>().parent_edge.GetComponent<LineRenderer>().SetColors(hightlight_color,hightlight_color);
+					node.GetComponent<Node>().parent_arrow_head.GetComponent<LineRenderer>().SetColors(hightlight_color, hightlight_color);
 				}
 			}
 			
@@ -342,7 +344,8 @@ public class Network : MonoBehaviour {
 	
 				if ( !(explored_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ||
 				       frontier_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ) ) {
-					child.GetComponent<Node>().parent_edge = node.GetComponent<Node>().links[i];
+					child.GetComponent<Node>().parent_edge        =  node.GetComponent<Node>().links[i];
+					child.GetComponent<Node>().parent_arrow_head  =  node.GetComponent<Node>().arrow_heads[i];
 					frontier_set.Insert(0, child);
 					set_g(child);
 					child.GetComponent<Node>().parent = node;

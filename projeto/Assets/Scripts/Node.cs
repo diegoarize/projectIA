@@ -23,10 +23,12 @@ public class Node : MonoBehaviour {
 	public     node_state         state  =  node_state.INITIAL;  
 	public     Transform           edge_prefab;
 	public     List<Transform>     links;   
+	public	   List<Transform>     arrow_heads;	
 	private    bool                successor_moved;
 
 	public	   Transform           parent;  // The node in the searcj tree that generated this node
 	public     Transform           parent_edge;
+	public     Transform           parent_arrow_head;
 
 	public     Color              default_color;
 	public     Color			  hightlight_color;	
@@ -54,6 +56,15 @@ public class Node : MonoBehaviour {
 			for (int i = 0; i != links.Count; ++i) {
 				links[i].GetComponent<LineRenderer>().SetPosition(0, this.transform.position);
 				links[i].GetComponent<LineRenderer>().SetPosition(1, successors[i].transform.position);
+			
+				Vector3 pos = successors[i].transform.position - this.transform.position;
+				pos [0] *= 0.6f;
+				pos [1] *= 0.6f;
+				pos += this.transform.position;
+
+				arrow_heads[i].GetComponent<LineRenderer> ().SetPosition (0,pos);
+				arrow_heads[i].GetComponent<LineRenderer> ().SetPosition (1, successors[i].transform.position);
+
 			}
 			prev_pos         = transform.position;
 			successor_moved  =  false;
@@ -108,18 +119,35 @@ public class Node : MonoBehaviour {
 
 	public void insert_sucessor(Transform n)
 	{
-		Transform obj;
+		Transform link;
+		Transform arrow_head;
 
-		obj = Instantiate (edge_prefab, this.transform.position, Quaternion.identity) as Transform;
-		obj.GetComponent<LineRenderer> ().SetVertexCount (2);
-		obj.GetComponent<LineRenderer> ().SetPosition (0, this.transform.position);
-		obj.GetComponent<LineRenderer> ().SetPosition (1, n.transform.position);
-		obj.GetComponent<LineRenderer>().material = new Material (Shader.Find("Particles/Additive"));
-		obj.GetComponent<LineRenderer> ().SetColors (default_color, default_color);
-		obj.GetComponent<LineRenderer> ().SetWidth (0.1f, 0.1f);
-		links.Add (obj);
+		link = Instantiate (edge_prefab, this.transform.position, Quaternion.identity) as Transform;
+		link.GetComponent<LineRenderer> ().SetVertexCount (2);
+		link.GetComponent<LineRenderer> ().SetPosition (0, this.transform.position);
+		link.GetComponent<LineRenderer> ().SetPosition (1, n.transform.position);
+		link.GetComponent<LineRenderer>().material = new Material (Shader.Find("Particles/Additive"));
+		link.GetComponent<LineRenderer> ().SetColors (default_color, default_color);
+		link.GetComponent<LineRenderer> ().SetWidth (0.1f, 0.1f);
+		links.Add (link);
+
+		Vector3 pos = n.transform.position - this.transform.position;
+		pos [0] *= 0.6f;
+		pos [1] *= 0.6f;
+		pos += this.transform.position;
+
+
+
+		arrow_head = Instantiate (edge_prefab, this.transform.position, Quaternion.identity) as Transform;
+		arrow_head.GetComponent<LineRenderer> ().SetVertexCount (2);
+		arrow_head.GetComponent<LineRenderer> ().SetPosition (0,pos);
+		arrow_head.GetComponent<LineRenderer> ().SetPosition (1, n.transform.position);
+		arrow_head.GetComponent<LineRenderer>().material = new Material (Shader.Find("Particles/Additive"));
+		arrow_head.GetComponent<LineRenderer> ().SetColors (default_color, default_color);
+		arrow_head.GetComponent<LineRenderer> ().SetWidth (0.5f, 0.1f);
+		arrow_heads.Add (arrow_head);
+	
 		successors.Add (n);
-
 		n.GetComponent<Node> ().predecessor.Add (this.transform);
 	}
 
