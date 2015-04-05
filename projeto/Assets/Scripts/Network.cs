@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Network : MonoBehaviour {
 
@@ -16,10 +17,13 @@ public class Network : MonoBehaviour {
 	private   			Transform         curr_state;
 	private             Color             hightlight_color;
 	public        	    Color             default_color;
+	private 			int					nodeCount = 0;//nodes' id counter
 
 	// Use this for initialization
 	void Start () 
 	{
+		/*
+
 		Transform obj1, obj2, obj3, obj4, obj5, obj6;
 		obj1 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
 		obj2 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
@@ -85,6 +89,7 @@ public class Network : MonoBehaviour {
 
 		D_first_search (obj1);
 
+		*/
 	}
 	/**
 	 * It creates a node on the screen
@@ -94,6 +99,21 @@ public class Network : MonoBehaviour {
 	public Transform createNode(Vector3 mousePosition)
 	{
 		Transform obj = Instantiate (node_prefab, mousePosition, Quaternion.identity) as Transform;
+		if (graph.Count == 0) {
+			//first Node
+			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.INITIAL, mousePosition,
+			                                link_speed, 2, vel_proc);
+			nodeCount++;
+		} else if (nodeCount == 1) {
+			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.FINAL, mousePosition,
+			                                link_speed, 2, vel_proc);
+			nodeCount++;
+		} else {
+			graph.ElementAt (nodeCount - 1).GetComponent<Node> ().set_state (Node.node_state.INTERMEDIARY);
+			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.FINAL, mousePosition,
+			                                  link_speed, 2, vel_proc);
+			nodeCount++;
+		}
 		return obj;
 	}
 

@@ -39,8 +39,10 @@ public class GUIcontroller : MonoBehaviour {
 	}
 
 	void createNode() {
-		Debug.Log("create a node " + mousePosition);
+		Transform node = net.createNode (mousePosition);
+		net.insertOnNetwork (node);
 		//TODO: node.showBufferOnGUI ()
+		Debug.Log("create a node " + node);
 	}
 
 	void createEdge() {
