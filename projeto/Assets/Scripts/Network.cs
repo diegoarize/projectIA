@@ -19,6 +19,7 @@ public class Network : MonoBehaviour {
 	public        	    Color             default_color;
 	private 			int					nodeCount = 0;//nodes' id counter
 
+	public  Camera cam;
 
 	// Use this for initialization
 	void Start () 
@@ -100,27 +101,29 @@ public class Network : MonoBehaviour {
 	public Transform createNode(Vector3 mousePosition)
 	{
 		Debug.Log (mousePosition);
-		GameObject obj = Instantiate (node_prefab.gameObject, Input.mousePosition, Quaternion.identity) as GameObject;
+		Transform obj = Instantiate (node_prefab, Input.mousePosition, Quaternion.identity) as Transform;
 		Debug.Log(obj);
+		mousePosition [2] = 5.0f;
+
 		if (nodeCount == 0) {
 			//first Node
-			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.INITIAL, mousePosition,
+			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.INITIAL, cam.ScreenToWorldPoint(mousePosition) ,
 			                                link_speed, 2, vel_proc);
 			curr_state = obj.transform;//estado inicial
 			nodeCount++;
 		} else if (nodeCount == 1) {
-			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.FINAL, mousePosition,
+			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.FINAL,cam.ScreenToWorldPoint(mousePosition),
 			                                link_speed, 2, vel_proc);
 			final_state = obj.transform;//estado final
 			nodeCount++;
 		} else {
 			graph.ElementAt (nodeCount - 1).GetComponent<Node> ().set_state (Node.node_state.INTERMEDIARY);
-			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.FINAL, mousePosition,
+			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.FINAL, cam.ScreenToWorldPoint(mousePosition),
 			                                  link_speed, 2, vel_proc);
 			final_state = obj.transform;//estado final
 			nodeCount++;
 		}
-		return obj.transform;
+		return obj;
 	}
 
 	/*
