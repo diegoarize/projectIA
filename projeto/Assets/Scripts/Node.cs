@@ -161,4 +161,10 @@ public class Node : MonoBehaviour {
 	{
 		this.id = id;
 	}
+
+	public void showBufferOnGUI () {
+		Vector3 position = gameObject.transform.position.normalized;
+
+		GUI.Label (new Rect (position.x,position.y,100,50), "label");
+	}
 }

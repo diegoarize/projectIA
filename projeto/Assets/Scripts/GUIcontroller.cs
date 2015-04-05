@@ -22,22 +22,34 @@ public class GUIcontroller : MonoBehaviour {
 				createNodeClicked = false;
 			} else if(createEdgeClicked) {
 				if(parentNode == null) {
-					//TODO: captura objeto
+					parentNode = getClickedNode();
+					Debug.Log("parent node");
+					//TODO: Fazer o highlight do node clicado
 				} else {
-					//TODO: captura objeto pra o child
+					Debug.Log("child node");
+					childNode = getClickedNode();
+					//TODO: Fazer o highlight do node clicado e depois voltar os dois pra o normal
 					createEdge();
 					createEdgeClicked = false;
+					//clear the Nodes after create the edge
+					parentNode = childNode = null;
 				}
 			}
 		}
 	}
 
 	void createNode() {
-		Debug.Log("create a node " + mousePosition);
+		Transform node = net.createNode (mousePosition);
+		net.insertOnNetwork (node);
+		//TODO: node.showBufferOnGUI ()
+		Debug.Log("create a node " + node);
 	}
 
 	void createEdge() {
 		Debug.Log("create an edge");
+		//TODO: se der tempo ou for muito necessario fazer tratamento pra pegar somente 
+		//nodes que estejam na rede
+		net.insertSuccessor (parentNode, childNode);
 	}
 
 	void OnGUI () {
@@ -57,17 +69,20 @@ public class GUIcontroller : MonoBehaviour {
 		// Make the third button.
 		if(GUI.Button(new Rect(20,110,95,20), "Send pkt DFS")) {
 			Debug.Log("sending a packet DFS");
+			net.DFS();
 		}
 		if(GUI.Button(new Rect(20,140,95,20), "Send pkt A*")) {
 			Debug.Log("sending a packet A*");
+			net.aStar();
 		}
 	}
 
-	void getClickedNode() {
+	private Transform getClickedNode() {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit2D hit = Physics2D.Raycast (ray.origin, ray.direction, Mathf.Infinity);
 		if (hit) {
-			Debug.Log (hit.collider.gameObject.transform);
+			return hit.collider.gameObject.transform;
 		}
+		return null;
 	}
 }

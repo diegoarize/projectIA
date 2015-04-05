@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Network : MonoBehaviour {
 
@@ -16,10 +17,14 @@ public class Network : MonoBehaviour {
 	private   			Transform         curr_state;
 	private             Color             hightlight_color;
 	public        	    Color             default_color;
+	private 			int					nodeCount = 0;//nodes' id counter
+
 
 	// Use this for initialization
 	void Start () 
 	{
+		/*
+
 		Transform obj1, obj2, obj3, obj4, obj5, obj6;
 		obj1 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
 		obj2 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
@@ -85,6 +90,76 @@ public class Network : MonoBehaviour {
 
 		D_first_search (obj1);
 
+		*/
+	}
+	/**
+	 * It creates a node on the screen
+	 * @param Vector3 - mousePosition
+	 * @return Transform - created Node
+	 */
+	public Transform createNode(Vector3 mousePosition)
+	{
+		Debug.Log (mousePosition);
+		GameObject obj = Instantiate (node_prefab.gameObject, Input.mousePosition, Quaternion.identity) as GameObject;
+		Debug.Log(obj);
+		if (nodeCount == 0) {
+			//first Node
+			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.INITIAL, mousePosition,
+			                                link_speed, 2, vel_proc);
+			curr_state = obj.transform;//estado inicial
+			nodeCount++;
+		} else if (nodeCount == 1) {
+			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.FINAL, mousePosition,
+			                                link_speed, 2, vel_proc);
+			final_state = obj.transform;//estado final
+			nodeCount++;
+		} else {
+			graph.ElementAt (nodeCount - 1).GetComponent<Node> ().set_state (Node.node_state.INTERMEDIARY);
+			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.FINAL, mousePosition,
+			                                  link_speed, 2, vel_proc);
+			final_state = obj.transform;//estado final
+			nodeCount++;
+		}
+		return obj.transform;
+	}
+
+	/*
+	 * inserts a node into the network
+	 * @param Node - node
+	 * 
+	 */
+	public void insertOnNetwork(Transform node)
+	{
+		graph.Add (node);
+	}
+
+	/*
+	 * inserts the child node to the parent node
+	 * successors list
+	 * @param Transform - parentNode
+	 * @param Transform - childNode
+	 * 
+	 */
+	public void insertSuccessor(Transform parentNode, Transform childNode)
+	{
+		parentNode.GetComponent<Node> ().insert_sucessor (childNode);
+	}
+	/*
+	 * executes the DFS algorithm
+	 * 
+	 */
+	public void DFS()
+	{
+		D_first_search (curr_state);//Pegar o retorno caso necessario
+	}
+
+	/*
+	 * executes the A* algorithm
+	 * 
+	 */
+	public void aStar()
+	{
+		a_star (curr_state);//Pegar o retorno caso necessario
 	}
 
 	int max_dist(Transform initial_state)
