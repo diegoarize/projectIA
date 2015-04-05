@@ -19,6 +19,7 @@ public class Network : MonoBehaviour {
 	public        	    Color             default_color;
 	private 			int					nodeCount = 0;//nodes' id counter
 
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -98,8 +99,10 @@ public class Network : MonoBehaviour {
 	 */
 	public Transform createNode(Vector3 mousePosition)
 	{
-		Transform obj = Instantiate (node_prefab, mousePosition, Quaternion.identity) as Transform;
-		if (graph.Count == 0) {
+		Debug.Log (mousePosition);
+		GameObject obj = Instantiate (node_prefab.gameObject, Input.mousePosition, Quaternion.identity) as GameObject;
+		Debug.Log(obj);
+		if (nodeCount == 0) {
 			//first Node
 			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.INITIAL, mousePosition,
 			                                link_speed, 2, vel_proc);
@@ -114,7 +117,7 @@ public class Network : MonoBehaviour {
 			                                  link_speed, 2, vel_proc);
 			nodeCount++;
 		}
-		return obj;
+		return obj.transform;
 	}
 
 	/*
