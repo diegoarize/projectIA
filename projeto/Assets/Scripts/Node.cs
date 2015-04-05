@@ -58,8 +58,8 @@ public class Node : MonoBehaviour {
 				links[i].GetComponent<LineRenderer>().SetPosition(1, successors[i].transform.position);
 			
 				Vector3 pos = successors[i].transform.position - this.transform.position;
-				pos [0] *= 0.6f;
-				pos [1] *= 0.6f;
+				pos [0] *= 0.8f;
+				pos [1] *= 0.8f;
 				pos += this.transform.position;
 
 				arrow_heads[i].GetComponent<LineRenderer> ().SetPosition (0,pos);
@@ -132,8 +132,8 @@ public class Node : MonoBehaviour {
 		links.Add (link);
 
 		Vector3 pos = n.transform.position - this.transform.position;
-		pos [0] *= 0.6f;
-		pos [1] *= 0.6f;
+		pos [0] *= 0.8f;
+		pos [1] *= 0.8f;
 		pos += this.transform.position;
 
 
@@ -144,7 +144,7 @@ public class Node : MonoBehaviour {
 		arrow_head.GetComponent<LineRenderer> ().SetPosition (1, n.transform.position);
 		arrow_head.GetComponent<LineRenderer>().material = new Material (Shader.Find("Particles/Additive"));
 		arrow_head.GetComponent<LineRenderer> ().SetColors (default_color, default_color);
-		arrow_head.GetComponent<LineRenderer> ().SetWidth (0.5f, 0.1f);
+		arrow_head.GetComponent<LineRenderer> ().SetWidth (0.4f, 0.1f);
 		arrow_heads.Add (arrow_head);
 	
 		successors.Add (n);
