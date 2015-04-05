@@ -106,15 +106,18 @@ public class Network : MonoBehaviour {
 			//first Node
 			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.INITIAL, mousePosition,
 			                                link_speed, 2, vel_proc);
+			curr_state = obj.transform;//estado inicial
 			nodeCount++;
 		} else if (nodeCount == 1) {
 			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.FINAL, mousePosition,
 			                                link_speed, 2, vel_proc);
+			final_state = obj.transform;//estado final
 			nodeCount++;
 		} else {
 			graph.ElementAt (nodeCount - 1).GetComponent<Node> ().set_state (Node.node_state.INTERMEDIARY);
 			obj.GetComponent<Node> ().set_up (""+nodeCount, Node.node_state.FINAL, mousePosition,
 			                                  link_speed, 2, vel_proc);
+			final_state = obj.transform;//estado final
 			nodeCount++;
 		}
 		return obj.transform;
@@ -128,6 +131,35 @@ public class Network : MonoBehaviour {
 	public void insertOnNetwork(Transform node)
 	{
 		graph.Add (node);
+	}
+
+	/*
+	 * inserts the child node to the parent node
+	 * successors list
+	 * @param Transform - parentNode
+	 * @param Transform - childNode
+	 * 
+	 */
+	public void insertSuccessor(Transform parentNode, Transform childNode)
+	{
+		parentNode.GetComponent<Node> ().insert_sucessor (childNode);
+	}
+	/*
+	 * executes the DFS algorithm
+	 * 
+	 */
+	public void DFS()
+	{
+		D_first_search (curr_state);//Pegar o retorno caso necessario
+	}
+
+	/*
+	 * executes the A* algorithm
+	 * 
+	 */
+	public void aStar()
+	{
+		a_star (curr_state);//Pegar o retorno caso necessario
 	}
 
 	int max_dist(Transform initial_state)

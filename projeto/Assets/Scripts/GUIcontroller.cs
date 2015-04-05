@@ -47,6 +47,9 @@ public class GUIcontroller : MonoBehaviour {
 
 	void createEdge() {
 		Debug.Log("create an edge");
+		//TODO: se der tempo ou for muito necessario fazer tratamento pra pegar somente 
+		//nodes que estejam na rede
+		net.insertSuccessor (parentNode, childNode);
 	}
 
 	void OnGUI () {
@@ -66,9 +69,11 @@ public class GUIcontroller : MonoBehaviour {
 		// Make the third button.
 		if(GUI.Button(new Rect(20,110,95,20), "Send pkt DFS")) {
 			Debug.Log("sending a packet DFS");
+			net.DFS();
 		}
 		if(GUI.Button(new Rect(20,140,95,20), "Send pkt A*")) {
 			Debug.Log("sending a packet A*");
+			net.aStar();
 		}
 	}
 
