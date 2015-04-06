@@ -21,11 +21,13 @@ public class Network : MonoBehaviour {
 
 	public  Camera cam;
 
+	public				int              MIN_DIST = -1;
+
 	// Use this for initialization
 	void Start () 
 	{
-
-/*
+		/*
+		
 		Transform obj1, obj2, obj3, obj4, obj5, obj6;
 		obj1 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
 		obj2 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
@@ -33,83 +35,96 @@ public class Network : MonoBehaviour {
 		obj4 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
 		obj5 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
 		obj6 = Instantiate (node_prefab, transform.position, Quaternion.identity) as Transform;
-
+		
 		obj1.GetComponent<Node>().set_up("A", Node.node_state.INITIAL, new Vector3(-8.2f, 0.0f, 0.0f),
 		                                 link_speed, 2,vel_proc);
-
-
+		
+		
 		obj2.GetComponent<Node>().set_up("F", Node.node_state.FINAL, new Vector3 (8.2f, 0.0f, 0.0f),
 		                                 link_speed, 3, vel_proc);
-
+		
 		obj3.GetComponent<Node>().set_up("E", Node.node_state.INTERMEDIARY, new Vector3 (5.2f, -4.5f, 0.0f),
 		                                 link_speed, 1, vel_proc);
-
-
+		
+		
 		obj4.GetComponent<Node>().set_up("D", Node.node_state.INTERMEDIARY, new Vector3 (5.2f, 4.5f, 0.0f),
 		                                 link_speed, 4, vel_proc);
-
-
+		
+		
 		obj5.GetComponent<Node>().set_up("B", Node.node_state.INTERMEDIARY, new Vector3 (-4.5f, 4.5f, 0.0f),
 		                                 link_speed, 2, vel_proc);
-
-
+		
+		
 		obj6.GetComponent<Node>().set_up("C", Node.node_state.INTERMEDIARY, new Vector3 (-4.5f, -4.5f, 0.0f),
 		                                 link_speed, 1, vel_proc);
-
-
+		
+		
 		curr_state  = obj1;
 		final_state = obj2;
-
+		
 		obj1.GetComponent<Node> ().insert_sucessor (obj5);
 		obj1.GetComponent<Node> ().insert_sucessor (obj6);
-
+		
+		
+		obj3.GetComponent<Node> ().insert_sucessor (obj4);
 		obj3.GetComponent<Node> ().insert_sucessor (obj2);
-
+		
 		obj4.GetComponent<Node> ().insert_sucessor (obj2);
-
+		obj4.GetComponent<Node> ().insert_sucessor (obj3);
+		
 		obj5.GetComponent<Node> ().insert_sucessor (obj4);
-
+		
 		obj6.GetComponent<Node> ().insert_sucessor (obj3);
-
+		
 		graph.Add (obj1);
 		graph.Add (obj2);
 		graph.Add (obj3);
 		graph.Add (obj4);
 		graph.Add (obj5);
 		graph.Add (obj6);
-
+		
 		this.frontier_set = new List<Transform> ();
 		this.explored_set = new List<Transform> ();
 		default_color     =  Color.black;
 		hightlight_color  =  Color.white;
 		//Calculate the maximum distance to the final node for all the nodes in the graph
-
-		for(int i = 0; i!= graph.Count; ++i){
-			graph[i].GetComponent<Node>().set_dist( max_dist(graph[i]) );
-			Debug.Log("MD( " + graph[i].GetComponent<Node>().id + ") = " +  graph[i].GetComponent<Node>().get_dist());
+		
+		
+		List<int> a = new List<int> ();;
+		for (int i = 0; i != graph.Count; ++i) {
+			distance (graph,graph[i],final_state);	
+			a.Add(graph[i].GetComponent<Node>().get_dist());
+		}
+		for (int i = 0; i!= a.Count; ++i) {
+			graph[i].GetComponent<Node>().set_dist(a[i]);
 		}
 
-		D_first_search (obj1);
-
-		*/
+*/
 	}
 	/*
 	 * Calculate the maximum distance to the final node for all the nodes in the graph
 	 * 
 	 */
+
 	private void calculateDistances()
 	{
 		this.frontier_set = new List<Transform> ();
 		this.explored_set = new List<Transform> ();
-		default_color = Color.black;
-		hightlight_color = Color.white;
+		default_color     =  Color.black;
+		hightlight_color  =  Color.white;
 		//Calculate the maximum distance to the final node for all the nodes in the graph
 		
-		for (int i = 0; i!= graph.Count; ++i) {
-			graph [i].GetComponent<Node> ().set_dist (max_dist (graph [i]));
-			Debug.Log ("MD( " + graph [i].GetComponent<Node> ().id + ") = " + graph [i].GetComponent<Node> ().get_dist ());
+		
+		List<int> a = new List<int> ();;
+		for (int i = 0; i != graph.Count; ++i) {
+			distance (graph,graph[i],final_state);	
+			a.Add(graph[i].GetComponent<Node>().get_dist());
+		}
+		for (int i = 0; i!= a.Count; ++i) {
+			graph[i].GetComponent<Node>().set_dist(a[i]);
 		}
 	}
+
 	/**
 	 * It creates a node on the screen
 	 * @param Vector3 - mousePosition
@@ -187,48 +202,55 @@ public class Network : MonoBehaviour {
 		a_star (curr_state);//Pegar o retorno caso necessario
 	}
 
-	int max_dist(Transform initial_state)
+	Transform get_larger_dist(List<Transform> g ) 
 	{
-		Transform node = initial_state;
-		int max   =  -1;
-		int dist  =  -1;
-
-		if (frontier_set.Count != 0) {
-			frontier_set.Clear ();
-
-		}
-		if (explored_set.Count != 0) {
-			explored_set.Clear ();
-
-		}
-		frontier_set.Add(node);
-	
-		while(true) {
-			if (frontier_set.Count == 0) {
-				return max;
+		Transform node = null;
+		
+		for ( int i = 0; i != g.Count ; ++i) {
+			if ( node == null) {
+				node = g[i];
 			}
-			node  =  frontier_set[0];
-			frontier_set.RemoveAt(0);
-			dist++;
-			if(node.GetComponent<Node>().state == Node.node_state.FINAL){
-				max  =  (dist > max) ? (dist) : (max);
-				dist = 0;
-			}
-			else{
-				explored_set.Add(node);
-			}
-
-
-			for(int i = 0; i != node.GetComponent<Node>().successors.Count; ++i){
-				Transform child = node.GetComponent<Node>().successors[i];
-				child.GetComponent<Node>().parent = node;
-				if ( !(explored_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ||
-				       frontier_set.Find( x => x.GetComponent<Node>().id == child.GetComponent<Node>().id) ) ) {
-					frontier_set.Insert(0, child);
+			else {
+				if( g[i].GetComponent<Node>().get_dist() > node.GetComponent<Node>().get_dist() ) {
+					node = g[i];
 				}
-
 			}
-
+		}
+		return node;
+	}
+	
+	
+	void distance(List<Transform> g, Transform initial_state, Transform final_state) 
+	{
+		List<Transform> unvisited_set = new List<Transform> ();
+		Node_Comparer node_Comparer = new Node_Comparer();
+		
+		for (int i = 0; i != g.Count; ++i) {
+			g[i].GetComponent<Node>().set_dist(MIN_DIST);
+			unvisited_set.Add(g[i]);
+		}
+		initial_state.GetComponent<Node> ().set_dist (0);
+		Transform current_node = initial_state;
+		int j = 0;
+		while (true) {
+			Debug.Log(current_node.GetComponent<Node>().id);
+			for (int i = 0; i != current_node.GetComponent<Node>().successors.Count; ++i) {
+				Transform child = current_node.GetComponent<Node>().successors[i];
+				if( child.GetComponent<Node>().get_dist() < current_node.GetComponent<Node>().get_dist() + 1){
+					child.GetComponent<Node>().set_dist(current_node.GetComponent<Node>().get_dist() + 1);
+				}
+			}
+			int index;
+			index = unvisited_set.FindIndex (x => x.GetComponent<Node> ().id == current_node.GetComponent<Node> ().id ); 
+			unvisited_set.RemoveAt (index);
+			
+			
+			current_node = get_larger_dist(unvisited_set);
+			if(  current_node == null || current_node.GetComponent<Node>().get_dist() == MIN_DIST ){
+				initial_state.GetComponent<Node>().set_dist( final_state.GetComponent<Node>().get_dist() );
+				final_state.GetComponent<Node>().set_dist(0);
+				return;
+			}
 		}
 	}
 

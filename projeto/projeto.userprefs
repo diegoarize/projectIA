@@ -1,10 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GUIcontroller.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GUIcontroller.cs">
     <Files>
-      <File FileName="Assets/Scripts/GUIcontroller.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Network.cs" Line="337" Column="125" />
-      <File FileName="Assets/Scripts/Node.cs" Line="66" Column="86" />
+      <File FileName="Assets\Scripts\GUIcontroller.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Network.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Node.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
